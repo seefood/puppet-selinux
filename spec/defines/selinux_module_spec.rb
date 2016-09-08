@@ -7,12 +7,14 @@ describe 'selinux::module' do
   context 'present case' do
     let(:params) do
       {
-        source: 'test_value'
+        source: 'puppet:///modules/mymodule/selinux/mymodule.te'
       }
     end
 
     it do
       should contain_file('/usr/share/selinux/local_mymodule.te').that_notifies('Exec[/usr/share/selinux/local_mymodule.pp]')
+
+      should contain_exec('/usr/share/selinux/local_mymodule.pp').with(command: 'make -f /usr/share/selinux/devel/Makefile local_mymodule.pp')
 
       should contain_selmodule('mymodule').with_ensure('present')
     end
@@ -21,14 +23,12 @@ describe 'selinux::module' do
   context 'absent case' do
     let(:params) do
       {
-        ensure: 'absent',
-        source: 'test_value'
+        ensure: 'absent'
       }
     end
 
     it do
-      should contain_selmodule('mymodule')
-        .with_ensure('absent')
+      should contain_selmodule('mymodule').with_ensure('absent')
     end
   end  # context
 end # describe

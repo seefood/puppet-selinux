@@ -29,8 +29,22 @@ class selinux::params {
             '19','20' : {
               $package_name = 'policycoreutils-python'
             }
-            '21','22','23','24' : {
+            '21','22','23' : {
               $package_name = 'policycoreutils-devel'
+            }
+            '24' : {
+              $package_name = 'selinux-policy-devel'
+            }
+            default: {
+              fail("${::operatingsystem}-${::os_maj_release} is not supported")
+            }
+          }
+        }
+       'Amazon': {
+        $sx_fs_mount = '/selinux'
+          case $os_maj_release {
+            '4': {
+              $package_name = 'policycoreutils-python'
             }
             default: {
               fail("${::operatingsystem}-${::os_maj_release} is not supported")
@@ -45,7 +59,7 @@ class selinux::params {
           case $os_maj_release {
             '7': {
               $sx_fs_mount = '/sys/fs/selinux'
-              $package_name = 'policycoreutils-devel'
+              $package_name = 'selinux-policy-devel'
             }
             '6': {
               $sx_fs_mount = '/selinux'
